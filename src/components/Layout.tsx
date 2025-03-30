@@ -2,12 +2,21 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import { useLocation } from 'react-router-dom';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const location = useLocation();
+  const isAuthPage = ['/login', '/signup', '/forgot-password'].includes(location.pathname);
+  
+  // For auth pages, don't use the standard layout
+  if (isAuthPage) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
