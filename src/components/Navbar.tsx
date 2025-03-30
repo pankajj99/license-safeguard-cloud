@@ -21,7 +21,7 @@ const Navbar = () => {
           <div className="relative max-w-md">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <Input 
-              placeholder="Search..." 
+              placeholder="Search License Safeguard..." 
               className="pl-10 bg-gray-50 border border-gray-200 focus-visible:ring-clms-lightBlue" 
             />
           </div>
@@ -39,7 +39,7 @@ const Navbar = () => {
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
           <div className="h-8 w-8 rounded-full bg-clms-blue flex items-center justify-center text-white">
-            A
+            LS
           </div>
         </div>
       </div>

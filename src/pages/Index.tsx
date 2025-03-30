@@ -18,7 +18,7 @@ const Index = () => {
       <div className="mb-8">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <h1 className="text-2xl font-bold text-gray-900">License Safeguard Dashboard</h1>
             <p className="text-gray-500 mt-1">Welcome to your license management overview</p>
           </div>
           <div className="flex gap-3">
