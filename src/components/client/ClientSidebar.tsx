@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   Key, 
@@ -8,9 +8,12 @@ import {
   Settings, 
   LogOut,
   HelpCircle,
-  FileText
+  FileText,
+  Loader2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
+import { useState } from 'react';
 
 type NavItem = {
   name: string;
@@ -33,6 +36,21 @@ interface ClientSidebarProps {
 
 const ClientSidebar = ({ collapsed = false }: ClientSidebarProps) => {
   const location = useLocation();
+  const { user, signOut, loading } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await signOut();
+      navigate('/client/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <div className="flex flex-col h-full text-white">
@@ -75,16 +93,21 @@ const ClientSidebar = ({ collapsed = false }: ClientSidebarProps) => {
       </nav>
 
       <div className="p-4 mt-auto">
-        <Link
-          to="/client/login"
+        <button
+          onClick={handleLogout}
+          disabled={isLoggingOut}
           className={cn(
-            "flex items-center py-3 px-3 rounded-md transition-all text-gray-300 hover:bg-white/5 hover:text-white",
+            "flex items-center py-3 px-3 rounded-md transition-all text-gray-300 hover:bg-white/5 hover:text-white w-full",
             collapsed ? "justify-center" : ""
           )}
         >
-          <LogOut size={20} />
+          {isLoggingOut ? (
+            <Loader2 size={20} className="animate-spin" />
+          ) : (
+            <LogOut size={20} />
+          )}
           {!collapsed && <span className="ml-4">Logout</span>}
-        </Link>
+        </button>
       </div>
 
       <div className={cn(
@@ -94,16 +117,18 @@ const ClientSidebar = ({ collapsed = false }: ClientSidebarProps) => {
         {!collapsed ? (
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full bg-clms-lightBlue flex items-center justify-center text-white font-medium">
-              C
+              {user?.email?.[0].toUpperCase() || 'C'}
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium">Client User</p>
-              <p className="text-xs text-gray-400">client@example.com</p>
+              <p className="text-sm font-medium">
+                {user?.user_metadata?.contact_name || 'Client User'}
+              </p>
+              <p className="text-xs text-gray-400">{user?.email || 'client@example.com'}</p>
             </div>
           </div>
         ) : (
           <div className="h-8 w-8 mx-auto rounded-full bg-clms-lightBlue flex items-center justify-center text-white font-medium">
-            C
+            {user?.email?.[0].toUpperCase() || 'C'}
           </div>
         )}
       </div>

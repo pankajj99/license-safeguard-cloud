@@ -1,88 +1,39 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Check, Key, Search, X } from 'lucide-react';
-
-type License = {
-  id: string;
-  name: string;
-  type: string;
-  status: 'active' | 'expired' | 'renewing';
-  expiryDate: string;
-  seats: {
-    used: number;
-    total: number;
-  };
-};
-
-const licenses: License[] = [
-  {
-    id: 'LIC-1234',
-    name: 'Enterprise Suite',
-    type: 'Annual',
-    status: 'active',
-    expiryDate: '2025-12-15',
-    seats: {
-      used: 42,
-      total: 50
-    }
-  },
-  {
-    id: 'LIC-5678',
-    name: 'Developer Tools',
-    type: 'Monthly',
-    status: 'active',
-    expiryDate: '2025-04-25',
-    seats: {
-      used: 18,
-      total: 25
-    }
-  },
-  {
-    id: 'LIC-9012',
-    name: 'Security Package',
-    type: 'Annual',
-    status: 'renewing',
-    expiryDate: '2025-05-13',
-    seats: {
-      used: 10,
-      total: 10
-    }
-  },
-  {
-    id: 'LIC-3456',
-    name: 'Analytics Add-on',
-    type: 'Monthly',
-    status: 'expired',
-    expiryDate: '2025-03-01',
-    seats: {
-      used: 0,
-      total: 5
-    }
-  },
-  {
-    id: 'LIC-7890',
-    name: 'Cloud Storage',
-    type: 'Annual',
-    status: 'active',
-    expiryDate: '2026-01-30',
-    seats: {
-      used: 3,
-      total: 10
-    }
-  }
-];
+import { Calendar, Check, Key, Search, X, Loader2 } from 'lucide-react';
+import { getClientLicenses } from '@/services/licenseService';
+import { License } from '@/types/database.types';
+import { useToast } from '@/hooks/use-toast';
 
 const ClientLicenses = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const { toast } = useToast();
 
-  const filteredLicenses = licenses.filter(license => {
+  const { data: licenses, isLoading, error } = useQuery({
+    queryKey: ['clientLicenses'],
+    queryFn: getClientLicenses,
+    onError: (err: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Error loading licenses",
+        description: err.message,
+      });
+    }
+  });
+
+  if (error) {
+    console.error('Error fetching licenses:', error);
+  }
+
+  const filteredLicenses = licenses?.filter((license: License) => {
     const matchesSearch = 
       license.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       license.id.toLowerCase().includes(searchQuery.toLowerCase());
@@ -93,6 +44,11 @@ const ClientLicenses = () => {
     
     return matchesSearch && matchesStatus;
   });
+
+  // Count licenses by status
+  const activeLicenses = licenses?.filter((license: License) => license.status === 'active').length || 0;
+  const expiredLicenses = licenses?.filter((license: License) => license.status === 'expired').length || 0;
+  const renewingLicenses = licenses?.filter((license: License) => license.status === 'renewing').length || 0;
 
   const getStatusBadge = (status: License['status']) => {
     switch (status) {
@@ -105,6 +61,14 @@ const ClientLicenses = () => {
       default:
         return null;
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric'
+    });
   };
 
   return (
@@ -129,7 +93,7 @@ const ClientLicenses = () => {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Active Licenses</p>
-                <p className="text-xl font-semibold">3</p>
+                <p className="text-xl font-semibold">{activeLicenses}</p>
               </div>
             </div>
             
@@ -139,7 +103,7 @@ const ClientLicenses = () => {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Expired Licenses</p>
-                <p className="text-xl font-semibold">1</p>
+                <p className="text-xl font-semibold">{expiredLicenses}</p>
               </div>
             </div>
             
@@ -149,7 +113,7 @@ const ClientLicenses = () => {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Renewal This Month</p>
-                <p className="text-xl font-semibold">1</p>
+                <p className="text-xl font-semibold">{renewingLicenses}</p>
               </div>
             </div>
           </div>
@@ -208,14 +172,23 @@ const ClientLicenses = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredLicenses.length === 0 ? (
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8">
+                      <div className="flex justify-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-clms-lightBlue" />
+                      </div>
+                      <p className="mt-2 text-gray-500">Loading licenses...</p>
+                    </TableCell>
+                  </TableRow>
+                ) : filteredLicenses?.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-4 text-gray-500">
                       No licenses found matching your criteria
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredLicenses.map((license) => (
+                  filteredLicenses?.map((license: License) => (
                     <TableRow key={license.id}>
                       <TableCell>
                         <div>
@@ -225,9 +198,9 @@ const ClientLicenses = () => {
                       </TableCell>
                       <TableCell>{license.type}</TableCell>
                       <TableCell>{getStatusBadge(license.status)}</TableCell>
-                      <TableCell>{license.expiryDate}</TableCell>
+                      <TableCell>{formatDate(license.expiry_date)}</TableCell>
                       <TableCell>
-                        {license.seats.used}/{license.seats.total}
+                        {license.used_seats}/{license.total_seats}
                       </TableCell>
                       <TableCell className="text-right">
                         <Link to={`/client/licenses/${license.id}`}>
@@ -249,8 +222,8 @@ const ClientLicenses = () => {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between text-sm text-gray-500">
-          <div>Showing {filteredLicenses.length} of {licenses.length} licenses</div>
-          <div>Last updated: April 13, 2025</div>
+          <div>Showing {filteredLicenses?.length || 0} of {licenses?.length || 0} licenses</div>
+          <div>Last updated: {new Date().toLocaleDateString()}</div>
         </CardFooter>
       </Card>
     </div>
