@@ -1,69 +1,35 @@
-# Welcome to your Lovable project
 
-## Project info
+# Client License Management System
 
-**URL**: https://lovable.dev/projects/37df58d8-983f-4f5f-8c78-98ee88424c31
+## Setup Instructions
 
-## How can I edit this code?
+### Environment Variables
 
-There are several ways of editing your application.
+For the application to work correctly, you need to set up the following environment variables:
 
-**Use Lovable**
+1. `VITE_SUPABASE_URL`: Your Supabase project URL
+2. `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/37df58d8-983f-4f5f-8c78-98ee88424c31) and start prompting.
+You can set these environment variables:
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Directly in the Lovable interface under Project Settings.
+2. By adding them when you deploy your application.
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+Example values:
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-**Edit a file directly in GitHub**
+### Database Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Make sure your Supabase project has the following tables:
 
-**Use GitHub Codespaces**
+1. `licenses` - For storing license information
+2. `clients` - For storing client information
+3. `license_users` - For storing users associated with licenses
+4. `documents` - For storing license-related documents
+5. `notifications` - For storing system notifications
+6. `license_history` - For tracking license actions
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/37df58d8-983f-4f5f-8c78-98ee88424c31) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Refer to the database types in `src/types/database.types.ts` for the exact schema.

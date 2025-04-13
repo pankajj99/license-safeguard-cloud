@@ -18,6 +18,9 @@ const ClientNavbar = () => {
   const { data: notifications, isLoading } = useQuery({
     queryKey: ['notifications'],
     queryFn: getUserNotifications,
+    onSuccess: () => {
+      // Success handling if needed
+    },
     onError: (error: Error) => {
       toast({
         variant: "destructive",

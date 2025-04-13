@@ -20,11 +20,14 @@ const ClientLicenses = () => {
   const { data: licenses, isLoading, error } = useQuery({
     queryKey: ['clientLicenses'],
     queryFn: getClientLicenses,
-    onError: (err: Error) => {
+    onSuccess: () => {
+      // Handle success if needed
+    },
+    onError: (error: Error) => {
       toast({
         variant: "destructive",
         title: "Error loading licenses",
-        description: err.message,
+        description: error.message,
       });
     }
   });
