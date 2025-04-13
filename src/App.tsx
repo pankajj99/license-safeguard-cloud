@@ -13,8 +13,6 @@ import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ClientLoginPage from "./pages/ClientLoginPage";
-import LandingPage from "./pages/LandingPage";
 
 // Client pages
 import ClientDashboard from "./pages/client/Dashboard";
@@ -31,11 +29,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Landing page */}
-          <Route path="/" element={<LandingPage />} />
-          
           {/* Admin routes */}
-          <Route path="/admin" element={<Index />} />
+          <Route path="/" element={<Index />} />
           <Route path="/licenses" element={<LicensesPage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
@@ -49,7 +44,6 @@ const App = () => (
           
           {/* Auth routes */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/client-login" element={<ClientLoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           
