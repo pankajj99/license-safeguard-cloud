@@ -14,15 +14,17 @@ const ClientNavbar = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   
-  const { data: notifications, isLoading } = useQuery({
+  const { data: notifications, isLoading, error } = useQuery({
     queryKey: ['notifications'],
     queryFn: getUserNotifications,
-    onError: (error: Error) => {
-      toast({
-        variant: "destructive",
-        title: "Error loading notifications",
-        description: error.message,
-      });
+    meta: {
+      onError: (error: Error) => {
+        toast({
+          variant: "destructive",
+          title: "Error loading notifications",
+          description: error.message,
+        });
+      }
     }
   });
   
