@@ -19,6 +19,8 @@ import ClientLicenses from "./pages/client/Licenses";
 import ClientLicenseDetails from "./pages/client/LicenseDetails";
 import ClientProfile from "./pages/client/Profile";
 import ClientLayout from "./components/client/ClientLayout";
+import ClientHelp from "./pages/client/Help";
+import ClientSettings from "./pages/client/Settings";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +47,8 @@ const App = () => (
           <Route path="/client/licenses" element={<ClientLayout><ClientLicenses /></ClientLayout>} />
           <Route path="/client/licenses/:id" element={<ClientLayout><ClientLicenseDetails /></ClientLayout>} />
           <Route path="/client/profile" element={<ClientLayout><ClientProfile /></ClientLayout>} />
+          <Route path="/client/help" element={<ClientLayout><ClientHelp /></ClientLayout>} />
+          <Route path="/client/settings" element={<ClientLayout><ClientSettings /></ClientLayout>} />
           
           {/* Catch-all Route */}
           <Route path="*" element={<NotFound />} />
