@@ -14,12 +14,6 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
-// Client pages
-import ClientDashboard from "./pages/client/Dashboard";
-import ClientLicenses from "./pages/client/Licenses";
-import ClientLicenseDetails from "./pages/client/LicenseDetails";
-import ClientProfile from "./pages/client/Profile";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -29,25 +23,15 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Admin routes */}
           <Route path="/" element={<Index />} />
           <Route path="/licenses" element={<LicensesPage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          
-          {/* Client routes */}
-          <Route path="/client" element={<ClientDashboard />} />
-          <Route path="/client/licenses" element={<ClientLicenses />} />
-          <Route path="/client/licenses/:id" element={<ClientLicenseDetails />} />
-          <Route path="/client/profile" element={<ClientProfile />} />
-          
-          {/* Auth routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          
-          {/* Catch-all route */}
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
