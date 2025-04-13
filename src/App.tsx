@@ -12,6 +12,13 @@ import ReportsPage from "./pages/ReportsPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
+import ClientLogin from "./pages/client/Login";
+import ClientRegister from "./pages/client/Register";
+import ClientDashboard from "./pages/client/Dashboard";
+import ClientLicenses from "./pages/client/Licenses";
+import ClientLicenseDetails from "./pages/client/LicenseDetails";
+import ClientProfile from "./pages/client/Profile";
+import ClientLayout from "./components/client/ClientLayout";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +29,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Admin Routes */}
           <Route path="/" element={<Index />} />
           <Route path="/licenses" element={<LicensesPage />} />
           <Route path="/clients" element={<ClientsPage />} />
@@ -29,7 +37,16 @@ const App = () => (
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/documents" element={<DocumentsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          
+          {/* Client Routes */}
+          <Route path="/client/login" element={<ClientLogin />} />
+          <Route path="/client/register" element={<ClientRegister />} />
+          <Route path="/client" element={<ClientLayout><ClientDashboard /></ClientLayout>} />
+          <Route path="/client/licenses" element={<ClientLayout><ClientLicenses /></ClientLayout>} />
+          <Route path="/client/licenses/:id" element={<ClientLayout><ClientLicenseDetails /></ClientLayout>} />
+          <Route path="/client/profile" element={<ClientLayout><ClientProfile /></ClientLayout>} />
+          
+          {/* Catch-all Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
