@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Bell, Search, X, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -18,14 +17,13 @@ const ClientNavbar = () => {
   const { data: notifications, isLoading, error } = useQuery({
     queryKey: ['notifications'],
     queryFn: getUserNotifications,
-    meta: {
-      onError: (error: Error) => {
-        toast({
-          variant: "destructive",
-          title: "Error loading notifications",
-          description: error.message,
-        });
-      }
+  }, {
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Error loading notifications",
+        description: error.message,
+      });
     }
   });
   

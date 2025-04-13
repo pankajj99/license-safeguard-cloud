@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -20,14 +19,13 @@ const ClientLicenses = () => {
   const { data: licenses, isLoading, error } = useQuery({
     queryKey: ['clientLicenses'],
     queryFn: getClientLicenses,
-    meta: {
-      onError: (error: Error) => {
-        toast({
-          variant: "destructive",
-          title: "Error loading licenses",
-          description: error.message,
-        });
-      }
+  }, {
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Error loading licenses",
+        description: error.message,
+      });
     }
   });
 
