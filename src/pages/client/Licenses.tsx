@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -20,9 +19,6 @@ const ClientLicenses = () => {
   const { data: licenses, isLoading, error } = useQuery({
     queryKey: ['clientLicenses'],
     queryFn: getClientLicenses,
-    onSuccess: () => {
-      // Handle success if needed
-    },
     onError: (error: Error) => {
       toast({
         variant: "destructive",
@@ -48,7 +44,6 @@ const ClientLicenses = () => {
     return matchesSearch && matchesStatus;
   });
 
-  // Count licenses by status
   const activeLicenses = licenses?.filter((license: License) => license.status === 'active').length || 0;
   const expiredLicenses = licenses?.filter((license: License) => license.status === 'expired').length || 0;
   const renewingLicenses = licenses?.filter((license: License) => license.status === 'renewing').length || 0;
@@ -121,7 +116,6 @@ const ClientLicenses = () => {
             </div>
           </div>
           
-          {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -161,7 +155,6 @@ const ClientLicenses = () => {
             </div>
           </div>
           
-          {/* Licenses Table */}
           <div className="border rounded-md overflow-hidden">
             <Table>
               <TableHeader>
