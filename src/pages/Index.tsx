@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LineChart } from '@/components/ReportCharts';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { ArrowUpRight, Info } from 'lucide-react';
+import { ArrowUpRight, ExternalLink, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Index = () => {
@@ -22,6 +22,9 @@ const Index = () => {
             <p className="text-gray-500 mt-1">Welcome to your license management overview</p>
           </div>
           <div className="flex gap-3">
+            <Button variant="outline" asChild>
+              <Link to="/reports">View Reports</Link>
+            </Button>
             <Button asChild>
               <Link to="/licenses">Manage Licenses</Link>
             </Button>
@@ -95,7 +98,7 @@ const Index = () => {
               </div>
               
               <Button variant="ghost" className="w-full flex gap-2 mt-2 text-clms-blue" asChild>
-                <Link to="/notifications">
+                <Link to="/reports">
                   View All Activities <ArrowUpRight size={16} />
                 </Link>
               </Button>
