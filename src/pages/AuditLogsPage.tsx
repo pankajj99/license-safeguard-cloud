@@ -14,7 +14,9 @@ import {
   CheckCircle,
   Info,
   Key,
-  Calendar
+  Calendar,
+  Settings,
+  ShieldAlert
 } from 'lucide-react';
 import { 
   Table, 
@@ -306,7 +308,7 @@ const AuditLogsPage = () => {
                     <div className="flex items-center gap-1">
                       {log.entity === 'license' && <Key size={14} />}
                       {log.entity === 'client' && <User size={14} />}
-                      {log.entity === 'auth' && <Shield size={14} />}
+                      {log.entity === 'auth' && <ShieldAlert size={14} />}
                       {log.entity === 'system' && <Settings size={14} />}
                       {log.entity === 'settings' && <Settings size={14} />}
                       <span>{log.entityId ? log.entityId : log.entity}</span>
