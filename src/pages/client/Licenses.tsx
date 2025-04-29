@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -18,16 +19,19 @@ const ClientLicenses = () => {
 
   const { data: licenses, isLoading, error } = useQuery({
     queryKey: ['clientLicenses'],
-    queryFn: getClientLicenses,
-  }, {
-    onError: (error: Error) => {
+    queryFn: getClientLicenses
+  });
+
+  // Handle errors from the query
+  useEffect(() => {
+    if (error) {
       toast({
         variant: "destructive",
         title: "Error loading licenses",
-        description: error.message,
+        description: (error as Error).message,
       });
     }
-  });
+  }, [error, toast]);
 
   if (error) {
     console.error('Error fetching licenses:', error);

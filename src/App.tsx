@@ -27,6 +27,7 @@ import ClientProfile from "./pages/client/Profile";
 import ClientLayout from "./components/client/ClientLayout";
 import ClientHelp from "./pages/client/Help";
 import ClientSettings from "./pages/client/Settings";
+import ClientDynamic from "./pages/client/Dynamic";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +94,11 @@ const App = () => (
             <Route path="/client/settings" element={
               <ProtectedRoute>
                 <ClientLayout><ClientSettings /></ClientLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/client/dynamic" element={
+              <ProtectedRoute>
+                <ClientLayout><ClientDynamic /></ClientLayout>
               </ProtectedRoute>
             } />
             

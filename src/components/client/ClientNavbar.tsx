@@ -16,16 +16,19 @@ const ClientNavbar = () => {
   
   const { data: notifications, isLoading, error } = useQuery({
     queryKey: ['notifications'],
-    queryFn: getUserNotifications,
-  }, {
-    onError: (error: Error) => {
+    queryFn: getUserNotifications
+  });
+  
+  // Handle errors from the query
+  React.useEffect(() => {
+    if (error) {
       toast({
         variant: "destructive",
         title: "Error loading notifications",
-        description: error.message,
+        description: (error as Error).message,
       });
     }
-  });
+  }, [error, toast]);
   
   const markAllReadMutation = useMutation({
     mutationFn: markAllNotificationsAsRead,

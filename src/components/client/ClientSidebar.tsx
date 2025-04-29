@@ -9,7 +9,8 @@ import {
   LogOut,
   HelpCircle,
   FileText,
-  Loader2
+  Loader2,
+  TrendingUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
@@ -23,6 +24,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { name: 'Dashboard', href: '/client', icon: Home },
+  { name: 'Dynamic', href: '/client/dynamic', icon: TrendingUp },
   { name: 'Licenses', href: '/client/licenses', icon: Key },
   { name: 'Profile', href: '/client/profile', icon: User },
   { name: 'Documents', href: '/client/documents', icon: FileText },
