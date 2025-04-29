@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +15,9 @@ import NotificationsPage from "./pages/NotificationsPage";
 import ReportsPage from "./pages/ReportsPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import SettingsPage from "./pages/SettingsPage";
+import TemplatesPage from "./pages/TemplatesPage";
+import AuditLogsPage from "./pages/AuditLogsPage";
+import AccessControlPage from "./pages/AccessControlPage";
 import NotFound from "./pages/NotFound";
 
 // Client Pages
@@ -61,6 +65,9 @@ function App() {
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/documents" element={<DocumentsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/templates" element={<TemplatesPage />} />
+              <Route path="/audit-logs" element={<AuditLogsPage />} />
+              <Route path="/access-control" element={<AccessControlPage />} />
               
               {/* Client Public Routes */}
               <Route path="/client/login" element={<ClientLogin />} />
