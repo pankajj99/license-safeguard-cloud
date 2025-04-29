@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import { 
@@ -45,7 +44,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { PieChart } from '@/components/ReportCharts';
+import { LineChart } from '@/components/ReportCharts';
 
 // Mock data for clients
 const clients = [
@@ -338,7 +337,7 @@ const ClientsPage = () => {
               </CardHeader>
               <CardContent className="flex justify-center py-6">
                 <div className="w-[300px] h-[300px]">
-                  <PieChart />
+                  <LineChart />
                 </div>
               </CardContent>
             </Card>

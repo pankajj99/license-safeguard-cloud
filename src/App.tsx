@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,6 +27,7 @@ import ClientLayout from "./components/client/ClientLayout";
 import ClientHelp from "./pages/client/Help";
 import ClientSettings from "./pages/client/Settings";
 import ClientDynamic from "./pages/client/Dynamic";
+import ClientPortal from './pages/client/ClientPortal';
 
 const queryClient = new QueryClient();
 
@@ -44,71 +44,74 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Admin Routes */}
-            <Route path="/" element={<Index />} />
-            <Route path="/licenses" element={<LicensesPage />} />
-            <Route path="/clients" element={<ClientsPage />} />
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/reports" element={<ReportsPage />} />
-            <Route path="/documents" element={<DocumentsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            
-            {/* Client Public Routes */}
-            <Route path="/client/login" element={<ClientLogin />} />
-            <Route path="/client/register" element={<ClientRegister />} />
-            
-            {/* Client Protected Routes */}
-            <Route path="/client" element={
-              <ProtectedRoute>
-                <ClientLayout><ClientDashboard /></ClientLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/client/licenses" element={
-              <ProtectedRoute>
-                <ClientLayout><ClientLicenses /></ClientLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/client/licenses/:id" element={
-              <ProtectedRoute>
-                <ClientLayout><ClientLicenseDetails /></ClientLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/client/profile" element={
-              <ProtectedRoute>
-                <ClientLayout><ClientProfile /></ClientLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/client/help" element={
-              <ProtectedRoute>
-                <ClientLayout><ClientHelp /></ClientLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/client/settings" element={
-              <ProtectedRoute>
-                <ClientLayout><ClientSettings /></ClientLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/client/dynamic" element={
-              <ProtectedRoute>
-                <ClientLayout><ClientDynamic /></ClientLayout>
-              </ProtectedRoute>
-            } />
-            
-            {/* Catch-all Route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Admin Routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/licenses" element={<LicensesPage />} />
+              <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
+              <Route path="/documents" element={<DocumentsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              
+              {/* Client Public Routes */}
+              <Route path="/client/login" element={<ClientLogin />} />
+              <Route path="/client/register" element={<ClientRegister />} />
+              
+              {/* Client Protected Routes */}
+              <Route path="/client" element={
+                <ProtectedRoute>
+                  <ClientLayout><ClientDashboard /></ClientLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/client/licenses" element={
+                <ProtectedRoute>
+                  <ClientLayout><ClientLicenses /></ClientLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/client/licenses/:id" element={
+                <ProtectedRoute>
+                  <ClientLayout><ClientLicenseDetails /></ClientLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/client/profile" element={
+                <ProtectedRoute>
+                  <ClientLayout><ClientProfile /></ClientLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/client/help" element={
+                <ProtectedRoute>
+                  <ClientLayout><ClientHelp /></ClientLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/client/settings" element={
+                <ProtectedRoute>
+                  <ClientLayout><ClientSettings /></ClientLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/client/dynamic" element={
+                <ProtectedRoute>
+                  <ClientLayout><ClientDynamic /></ClientLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/client/portal" element={<ClientPortal />} />
+              
+              {/* Catch-all Route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;
