@@ -1,274 +1,259 @@
 
 import React, { useState } from 'react';
-import Layout from '@/components/Layout';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table';
-import { 
-  Filter, 
-  Download,
-  FileText,
-  MoreHorizontal,
-  AlertTriangle,
-  Clock,
-  CheckCircle
-} from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Calendar, Check, Key, Search, X } from 'lucide-react';
 
-// Mock data for client licenses
-const clientLicenses = [
+type License = {
+  id: string;
+  name: string;
+  type: string;
+  status: 'active' | 'expired' | 'renewing';
+  expiryDate: string;
+  seats: {
+    used: number;
+    total: number;
+  };
+};
+
+const licenses: License[] = [
   {
-    id: 'L-4587',
-    product: 'Enterprise Suite Pro',
-    type: 'Enterprise',
+    id: 'LIC-1234',
+    name: 'Enterprise Suite',
+    type: 'Annual',
     status: 'active',
-    startDate: '10/15/2023',
-    expiryDate: '10/14/2024',
+    expiryDate: '2025-12-15',
     seats: {
-      used: 230,
-      total: 250
-    },
-    renewalPrice: '$12,500'
-  },
-  {
-    id: 'L-4588',
-    product: 'Security Manager',
-    type: 'Standard',
-    status: 'expiring',
-    startDate: '10/10/2023',
-    expiryDate: '11/30/2023',
-    seats: {
-      used: 45,
+      used: 42,
       total: 50
-    },
-    renewalPrice: '$3,750'
+    }
   },
   {
-    id: 'L-4589',
-    product: 'Data Analyzer Pro',
-    type: 'Basic',
+    id: 'LIC-5678',
+    name: 'Developer Tools',
+    type: 'Monthly',
     status: 'active',
-    startDate: '05/22/2023',
-    expiryDate: '05/22/2024',
+    expiryDate: '2025-04-25',
     seats: {
-      used: 12,
+      used: 18,
       total: 25
-    },
-    renewalPrice: '$1,875'
+    }
   },
   {
-    id: 'L-4590',
-    product: 'Network Monitor',
-    type: 'Standard',
+    id: 'LIC-9012',
+    name: 'Security Package',
+    type: 'Annual',
+    status: 'renewing',
+    expiryDate: '2025-05-13',
+    seats: {
+      used: 10,
+      total: 10
+    }
+  },
+  {
+    id: 'LIC-3456',
+    name: 'Analytics Add-on',
+    type: 'Monthly',
     status: 'expired',
-    startDate: '10/01/2022',
-    expiryDate: '09/30/2023',
+    expiryDate: '2025-03-01',
     seats: {
       used: 0,
-      total: 75
-    },
-    renewalPrice: '$5,625'
+      total: 5
+    }
   },
   {
-    id: 'L-4591',
-    product: 'Cloud Storage Pro',
-    type: 'Premium',
+    id: 'LIC-7890',
+    name: 'Cloud Storage',
+    type: 'Annual',
     status: 'active',
-    startDate: '09/15/2023',
-    expiryDate: '09/14/2024',
+    expiryDate: '2026-01-30',
     seats: {
-      used: 87,
-      total: 120
-    },
-    renewalPrice: '$7,200'
+      used: 3,
+      total: 10
+    }
   }
 ];
 
 const ClientLicenses = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  
-  const filteredLicenses = searchQuery 
-    ? clientLicenses.filter(license => 
-        license.product.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        license.id.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : clientLicenses;
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  const filteredLicenses = licenses.filter(license => {
+    const matchesSearch = 
+      license.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      license.id.toLowerCase().includes(searchQuery.toLowerCase());
     
-  const activeCount = clientLicenses.filter(l => l.status === 'active').length;
-  const expiringCount = clientLicenses.filter(l => l.status === 'expiring').length;
-  const expiredCount = clientLicenses.filter(l => l.status === 'expired').length;
+    const matchesStatus = 
+      statusFilter === 'all' || 
+      license.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  const getStatusBadge = (status: License['status']) => {
+    switch (status) {
+      case 'active':
+        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      case 'expired':
+        return <Badge className="bg-red-100 text-red-800">Expired</Badge>;
+      case 'renewing':
+        return <Badge className="bg-blue-100 text-blue-800">Renewing</Badge>;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <Layout>
-      <div className="mb-8">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Your Licenses</h1>
-            <p className="text-gray-500 mt-1">Manage and monitor all your licenses in one place</p>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold">My Licenses</h1>
+        <Button className="bg-clms-lightBlue hover:bg-clms-blue">
+          Request New License
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle>License Summary</CardTitle>
+          <CardDescription>Overview of your organization's licenses</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="flex items-center p-4 bg-gray-50 rounded-lg border">
+              <div className="p-2 bg-green-100 rounded-full mr-3">
+                <Check className="h-5 w-5 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Active Licenses</p>
+                <p className="text-xl font-semibold">3</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center p-4 bg-gray-50 rounded-lg border">
+              <div className="p-2 bg-red-100 rounded-full mr-3">
+                <X className="h-5 w-5 text-red-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Expired Licenses</p>
+                <p className="text-xl font-semibold">1</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center p-4 bg-gray-50 rounded-lg border">
+              <div className="p-2 bg-blue-100 rounded-full mr-3">
+                <Calendar className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Renewal This Month</p>
+                <p className="text-xl font-semibold">1</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card className="border-l-4 border-l-green-500">
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="p-3 rounded-full bg-green-100">
-              <CheckCircle className="text-green-600" size={24} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Active</p>
-              <h3 className="text-2xl font-bold">{activeCount}</h3>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-l-4 border-l-yellow-500">
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="p-3 rounded-full bg-yellow-100">
-              <Clock className="text-yellow-600" size={24} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Expiring Soon</p>
-              <h3 className="text-2xl font-bold">{expiringCount}</h3>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-l-4 border-l-red-500">
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="p-3 rounded-full bg-red-100">
-              <AlertTriangle className="text-red-600" size={24} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Expired</p>
-              <h3 className="text-2xl font-bold">{expiredCount}</h3>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="bg-white rounded-md shadow">
-        <div className="p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="relative max-w-xs">
-              <Input 
-                placeholder="Search licenses..." 
-                className="pl-3 pr-10" 
+          
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search licenses..."
+                className="pl-9"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             
-            <Button variant="outline" size="icon">
-              <Filter size={16} />
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant={statusFilter === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setStatusFilter('all')}
+                className={statusFilter === 'all' ? 'bg-clms-lightBlue hover:bg-clms-blue' : ''}
+              >
+                All
+              </Button>
+              <Button
+                variant={statusFilter === 'active' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setStatusFilter('active')}
+                className={statusFilter === 'active' ? 'bg-clms-lightBlue hover:bg-clms-blue' : ''}
+              >
+                Active
+              </Button>
+              <Button
+                variant={statusFilter === 'expired' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setStatusFilter('expired')}
+                className={statusFilter === 'expired' ? 'bg-clms-lightBlue hover:bg-clms-blue' : ''}
+              >
+                Expired
+              </Button>
+            </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="flex items-center gap-1">
-              <Download size={16} />
-              <span>Export</span>
-            </Button>
-          </div>
-        </div>
-        
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>License ID</TableHead>
-              <TableHead>Product</TableHead>
-              <TableHead>License Type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Expiry Date</TableHead>
-              <TableHead>Seats Used</TableHead>
-              <TableHead>Renewal Price</TableHead>
-              <TableHead className="w-[100px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredLicenses.map(license => (
-              <TableRow key={license.id}>
-                <TableCell className="font-medium">{license.id}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <FileText size={16} className="text-gray-500" />
-                    {license.product}
-                  </div>
-                </TableCell>
-                <TableCell>{license.type}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant="outline"
-                    className={`
-                      ${license.status === 'active' ? 'bg-green-50 text-green-700 border-green-200' : ''}
-                      ${license.status === 'expiring' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : ''}
-                      ${license.status === 'expired' ? 'bg-red-50 text-red-700 border-red-200' : ''}
-                    `}
-                  >
-                    {license.status === 'active' && 'Active'}
-                    {license.status === 'expiring' && (
-                      <span className="flex items-center gap-1">
-                        <AlertTriangle size={12} />
-                        Expiring Soon
-                      </span>
-                    )}
-                    {license.status === 'expired' && 'Expired'}
-                  </Badge>
-                </TableCell>
-                <TableCell>{license.expiryDate}</TableCell>
-                <TableCell>{license.seats.used}/{license.seats.total}</TableCell>
-                <TableCell>{license.renewalPrice}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <Link to={`/client/licenses/${license.id}`} className="w-full">
-                          View details
+          {/* Licenses Table */}
+          <div className="border rounded-md overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>License</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Expiry Date</TableHead>
+                  <TableHead>Seats</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredLicenses.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-4 text-gray-500">
+                      No licenses found matching your criteria
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredLicenses.map((license) => (
+                    <TableRow key={license.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{license.name}</div>
+                          <div className="text-sm text-gray-500">{license.id}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{license.type}</TableCell>
+                      <TableCell>{getStatusBadge(license.status)}</TableCell>
+                      <TableCell>{license.expiryDate}</TableCell>
+                      <TableCell>
+                        {license.seats.used}/{license.seats.total}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Link to={`/client/licenses/${license.id}`}>
+                          <Button variant="outline" size="sm">
+                            View
+                          </Button>
                         </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>Manage users</DropdownMenuItem>
-                      <DropdownMenuItem>Download license</DropdownMenuItem>
-                      {(license.status === 'expired' || license.status === 'expiring') && (
-                        <DropdownMenuItem className="text-green-600">Renew license</DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </Layout>
+                        {license.status === 'expired' && (
+                          <Button size="sm" className="ml-2 bg-clms-lightBlue hover:bg-clms-blue">
+                            Renew
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between text-sm text-gray-500">
+          <div>Showing {filteredLicenses.length} of {licenses.length} licenses</div>
+          <div>Last updated: April 13, 2025</div>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

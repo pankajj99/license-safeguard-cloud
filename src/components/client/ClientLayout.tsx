@@ -1,18 +1,18 @@
 
 import React from 'react';
-import Sidebar from './Sidebar';
-import Navbar from './Navbar';
+import ClientSidebar from './ClientSidebar';
+import ClientNavbar from './ClientNavbar';
 
-interface LayoutProps {
+interface ClientLayoutProps {
   children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const ClientLayout = ({ children }: ClientLayoutProps) => {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
+      <ClientSidebar />
       <div className="flex flex-col flex-1">
-        <Navbar />
+        <ClientNavbar />
         <main className="flex-1 p-6 md:p-8 overflow-y-auto">
           {children}
         </main>
@@ -21,4 +21,4 @@ const Layout = ({ children }: LayoutProps) => {
   );
 };
 
-export default Layout;
+export default ClientLayout;

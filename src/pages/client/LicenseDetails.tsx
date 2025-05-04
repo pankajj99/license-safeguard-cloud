@@ -1,357 +1,458 @@
 
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Layout from '@/components/Layout';
-import { 
-  ArrowLeft, 
-  Download, 
-  FileText, 
-  Calendar, 
-  Users, 
-  Shield, 
-  Clock,
-  AlertTriangle,
-  ArrowRight,
-  CheckCircle2
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle,
-  CardDescription,
-  CardFooter
-} from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AlertCircle, ArrowLeft, Calendar, CheckCircle, Download, FileText, HelpCircle, Key, RefreshCw, User, Users } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
-// Mock license data
-const licensesData = {
-  'L-4587': {
-    id: 'L-4587',
-    product: 'Enterprise Suite Pro',
-    type: 'Enterprise',
-    status: 'active',
-    startDate: '10/15/2023',
-    expiryDate: '10/14/2024',
-    seats: {
-      used: 230,
-      total: 250
-    },
-    renewalPrice: '$12,500',
-    features: [
-      'Advanced Analytics',
-      'Premium Support',
-      'Custom Integrations',
-      'Unlimited Storage',
-      'Admin Dashboard',
-      'API Access',
-      'Team Collaboration',
-      'Audit Logs'
-    ],
-    usageHistory: [
-      { month: 'Oct', usage: 210 },
-      { month: 'Nov', usage: 215 },
-      { month: 'Dec', usage: 223 },
-      { month: 'Jan', usage: 230 }
-    ],
-    recentActivities: [
-      { action: 'User added', date: '2 days ago', user: 'Sarah Johnson' },
-      { action: 'License updated', date: '1 week ago', user: 'Admin' },
-      { action: '5 new users added', date: '2 weeks ago', user: 'Michael Chen' }
-    ]
-  },
-  'L-4588': {
-    id: 'L-4588',
-    product: 'Security Manager',
-    type: 'Standard',
-    status: 'expiring',
-    startDate: '10/10/2023',
-    expiryDate: '11/30/2023',
-    seats: {
-      used: 45,
-      total: 50
-    },
-    renewalPrice: '$3,750',
-    features: [
-      'Vulnerability Scanning',
-      'Intrusion Detection',
-      'Compliance Reports',
-      'User Authentication',
-      'Threat Monitoring'
-    ],
-    usageHistory: [
-      { month: 'Oct', usage: 38 },
-      { month: 'Nov', usage: 42 },
-      { month: 'Dec', usage: 45 },
-      { month: 'Jan', usage: 45 }
-    ],
-    recentActivities: [
-      { action: 'Security report downloaded', date: '1 day ago', user: 'James Wilson' },
-      { action: 'License expiry notification sent', date: '3 days ago', user: 'System' },
-      { action: 'User permissions updated', date: '1 week ago', user: 'Admin' }
-    ]
-  },
-  'L-4589': {
-    id: 'L-4589',
-    product: 'Data Analyzer Pro',
-    type: 'Basic',
-    status: 'active',
-    startDate: '05/22/2023',
-    expiryDate: '05/22/2024',
-    seats: {
-      used: 12,
-      total: 25
-    },
-    renewalPrice: '$1,875',
-    features: [
-      'Data Visualization',
-      'Basic Reports',
-      'Data Import/Export',
-      'Dashboard Creation'
-    ],
-    usageHistory: [
-      { month: 'Oct', usage: 10 },
-      { month: 'Nov', usage: 10 },
-      { month: 'Dec', usage: 11 },
-      { month: 'Jan', usage: 12 }
-    ],
-    recentActivities: [
-      { action: 'Report generated', date: '5 days ago', user: 'Emma Davis' },
-      { action: 'Data import completed', date: '2 weeks ago', user: 'Thomas Anderson' }
-    ]
-  }
+// Define license type
+type License = {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  status: 'active' | 'expired' | 'renewing';
+  expiryDate: string;
+  purchaseDate: string;
+  lastRenewal: string;
+  productKey: string;
+  seats: {
+    used: number;
+    total: number;
+  };
+  features: string[];
+  contacts: {
+    primary: {
+      name: string;
+      email: string;
+    };
+    technical: {
+      name: string;
+      email: string;
+    };
+  };
+  documents: {
+    id: string;
+    name: string;
+    type: string;
+    date: string;
+  }[];
+  history: {
+    id: string;
+    action: string;
+    date: string;
+    user: string;
+  }[];
 };
 
-const LicenseDetails = () => {
-  const { id } = useParams();
-  const license = licensesData[id as keyof typeof licensesData];
+const ClientLicenseDetails = () => {
+  const { id } = useParams<{ id: string }>();
   
-  if (!license) {
-    return (
-      <Layout>
-        <div className="flex flex-col items-center justify-center h-full py-20">
-          <h1 className="text-2xl font-bold mb-4">License not found</h1>
-          <p className="text-gray-500 mb-6">The license you're looking for doesn't exist or you don't have access to it.</p>
-          <Button asChild>
-            <Link to="/client/licenses">Back to Licenses</Link>
-          </Button>
-        </div>
-      </Layout>
-    );
-  }
+  // In a real app, you would fetch this data from an API
+  const license: License = {
+    id: id || 'LIC-1234',
+    name: 'Enterprise Suite',
+    description: 'Complete enterprise license package with all modules and premium support',
+    type: 'Annual',
+    status: 'active',
+    expiryDate: '2025-12-15',
+    purchaseDate: '2024-12-15',
+    lastRenewal: '2024-12-15',
+    productKey: 'ENTX-XXXX-XXXX-XXXX-XXXX',
+    seats: {
+      used: 42,
+      total: 50
+    },
+    features: [
+      'Core Platform Access',
+      'Advanced Analytics',
+      'Integration API',
+      'Premium Support',
+      'Mobile Application',
+      'Custom Reporting'
+    ],
+    contacts: {
+      primary: {
+        name: 'John Smith',
+        email: 'john.smith@example.com'
+      },
+      technical: {
+        name: 'Sarah Johnson',
+        email: 'sarah.johnson@example.com'
+      }
+    },
+    documents: [
+      {
+        id: 'DOC-001',
+        name: 'License Agreement',
+        type: 'PDF',
+        date: '2024-12-15'
+      },
+      {
+        id: 'DOC-002',
+        name: 'Invoice #INV-12345',
+        type: 'PDF',
+        date: '2024-12-15'
+      },
+      {
+        id: 'DOC-003',
+        name: 'Support Terms',
+        type: 'PDF',
+        date: '2024-12-15'
+      }
+    ],
+    history: [
+      {
+        id: 'HIST-001',
+        action: 'License activated',
+        date: '2024-12-15',
+        user: 'System'
+      },
+      {
+        id: 'HIST-002',
+        action: 'User John Doe added',
+        date: '2024-12-16',
+        user: 'Admin'
+      },
+      {
+        id: 'HIST-003',
+        action: '5 seats added',
+        date: '2025-02-10',
+        user: 'Admin'
+      },
+      {
+        id: 'HIST-004',
+        action: 'License configuration updated',
+        date: '2025-03-22',
+        user: 'Sarah Johnson'
+      }
+    ]
+  };
+
+  const getStatusBadge = (status: License['status']) => {
+    switch (status) {
+      case 'active':
+        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      case 'expired':
+        return <Badge className="bg-red-100 text-red-800">Expired</Badge>;
+      case 'renewing':
+        return <Badge className="bg-blue-100 text-blue-800">Renewing</Badge>;
+      default:
+        return null;
+    }
+  };
+
+  // Calculate days until expiry
+  const today = new Date();
+  const expiryDate = new Date(license.expiryDate);
+  const daysUntilExpiry = Math.ceil((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   
-  const seatsUsagePercent = Math.round((license.seats.used / license.seats.total) * 100);
-  const daysLeft = license.status === 'expired' ? 0 : 30; // Mock calculation
-  
+  // Convert date strings to readable format
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
-    <Layout>
-      <div className="mb-6">
-        <Link to="/client/licenses" className="text-gray-500 hover:text-gray-700 flex items-center gap-1 mb-4">
-          <ArrowLeft size={16} />
-          <span>Back to licenses</span>
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <Link to="/client/licenses">
+          <Button variant="outline" size="sm" className="flex items-center gap-1">
+            <ArrowLeft size={16} />
+            Back to Licenses
+          </Button>
         </Link>
+        <h1 className="text-2xl font-bold">{license.name}</h1>
+        {getStatusBadge(license.status)}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>License Details</CardTitle>
+              <CardDescription>{license.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="overview">
+                <TabsList className="grid grid-cols-4 w-full">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="users">Users</TabsTrigger>
+                  <TabsTrigger value="documents">Documents</TabsTrigger>
+                  <TabsTrigger value="history">History</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="overview" className="mt-4 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-500">License ID</p>
+                      <p className="font-medium">{license.id}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-500">Type</p>
+                      <p className="font-medium">{license.type}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-500">Purchase Date</p>
+                      <p className="font-medium">{formatDate(license.purchaseDate)}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-500">Last Renewal</p>
+                      <p className="font-medium">{formatDate(license.lastRenewal)}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-500">Expiry Date</p>
+                      <p className="font-medium">{formatDate(license.expiryDate)}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-500">Product Key</p>
+                      <p className="font-medium">{license.productKey}</p>
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div>
+                    <h3 className="text-sm font-medium mb-2">Included Features</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {license.features.map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <CheckCircle size={16} className="text-green-600" />
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div>
+                    <h3 className="text-sm font-medium mb-2">Contact Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-3 bg-gray-50 rounded-md">
+                        <p className="text-sm text-gray-500">Primary Contact</p>
+                        <p className="font-medium">{license.contacts.primary.name}</p>
+                        <p className="text-sm">{license.contacts.primary.email}</p>
+                      </div>
+                      <div className="p-3 bg-gray-50 rounded-md">
+                        <p className="text-sm text-gray-500">Technical Contact</p>
+                        <p className="font-medium">{license.contacts.technical.name}</p>
+                        <p className="text-sm">{license.contacts.technical.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="users" className="mt-4">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-medium">License Seats</h3>
+                        <p className="text-sm text-gray-500">
+                          {license.seats.used} of {license.seats.total} seats used
+                        </p>
+                      </div>
+                      <Button variant="outline" size="sm">Request More Seats</Button>
+                    </div>
+                    
+                    <Progress 
+                      value={(license.seats.used / license.seats.total) * 100} 
+                      className="h-2"
+                    />
+                    
+                    <div className="border rounded-md">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>User</TableHead>
+                            <TableHead>Email</TableHead>
+                            <TableHead>Date Added</TableHead>
+                            <TableHead>Status</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {/* Mock users data */}
+                          <TableRow>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                                  <User size={14} />
+                                </div>
+                                <span>John Doe</span>
+                              </div>
+                            </TableCell>
+                            <TableCell>john.doe@example.com</TableCell>
+                            <TableCell>Dec 16, 2024</TableCell>
+                            <TableCell><Badge className="bg-green-100 text-green-800">Active</Badge></TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                                  <User size={14} />
+                                </div>
+                                <span>Jane Smith</span>
+                              </div>
+                            </TableCell>
+                            <TableCell>jane.smith@example.com</TableCell>
+                            <TableCell>Jan 3, 2025</TableCell>
+                            <TableCell><Badge className="bg-green-100 text-green-800">Active</Badge></TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                                  <User size={14} />
+                                </div>
+                                <span>Robert Johnson</span>
+                              </div>
+                            </TableCell>
+                            <TableCell>robert.j@example.com</TableCell>
+                            <TableCell>Feb 12, 2025</TableCell>
+                            <TableCell><Badge className="bg-amber-100 text-amber-800">Pending</Badge></TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="documents" className="mt-4">
+                  <div className="space-y-4">
+                    {license.documents.map(doc => (
+                      <div key={doc.id} className="flex items-center justify-between p-3 border rounded-md">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-blue-100 rounded-md">
+                            <FileText size={16} className="text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">{doc.name}</p>
+                            <p className="text-sm text-gray-500">{doc.type} • {doc.date}</p>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm" className="gap-1">
+                          <Download size={16} />
+                          Download
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="history" className="mt-4">
+                  <div className="space-y-4">
+                    {license.history.map(item => (
+                      <div key={item.id} className="flex items-start gap-3 p-3 border rounded-md">
+                        <div className="p-2 bg-gray-100 rounded-full mt-1">
+                          <RefreshCw size={14} className="text-gray-600" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">{item.action}</p>
+                          <div className="flex text-sm text-gray-500 mt-1">
+                            <span>{item.date}</span>
+                            <span className="mx-1">•</span>
+                            <span>{item.user}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
         
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div className="flex items-center gap-3 mb-4 md:mb-0">
-            <div className="p-3 bg-gray-100 rounded-lg">
-              <FileText size={24} className="text-gray-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{license.product}</h1>
-              <p className="text-gray-500">License ID: {license.id}</p>
-            </div>
-          </div>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>License Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm text-gray-500">Expiration</span>
+                    <span className="text-sm font-medium">{daysUntilExpiry} days left</span>
+                  </div>
+                  <Progress value={(daysUntilExpiry / 365) * 100} className="h-2" />
+                  <p className="text-xs text-gray-500 mt-1">Expires on {formatDate(license.expiryDate)}</p>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm text-gray-500">Seat Usage</span>
+                    <span className="text-sm font-medium">{license.seats.used}/{license.seats.total}</span>
+                  </div>
+                  <Progress value={(license.seats.used / license.seats.total) * 100} className="h-2" />
+                  <p className="text-xs text-gray-500 mt-1">{license.seats.total - license.seats.used} seats available</p>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex-col items-stretch gap-2">
+              <Button className="w-full bg-clms-lightBlue hover:bg-clms-blue">
+                Renew License
+              </Button>
+              <Button variant="outline" className="w-full">
+                Request Support
+              </Button>
+            </CardFooter>
+          </Card>
           
-          <div className="flex flex-wrap gap-3">
-            <Button variant="outline" className="flex items-center gap-2">
-              <Download size={16} />
-              Download License
-            </Button>
-            
-            {(license.status === 'expired' || license.status === 'expiring') && (
-              <Button className="bg-clms-lightBlue hover:bg-clms-blue">Renew License</Button>
-            )}
-          </div>
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>Need Help?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="p-1.5 bg-blue-100 rounded-full">
+                  <HelpCircle size={16} className="text-blue-600" />
+                </div>
+                <div>
+                  <p className="font-medium">License Support</p>
+                  <p className="text-sm text-gray-500">Contact our team for license-related issues</p>
+                  <Button variant="link" className="p-0 h-auto text-clms-lightBlue">
+                    support@example.com
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="p-1.5 bg-green-100 rounded-full">
+                  <Key size={16} className="text-green-600" />
+                </div>
+                <div>
+                  <p className="font-medium">Activation Help</p>
+                  <p className="text-sm text-gray-500">Having trouble activating?</p>
+                  <Button variant="link" className="p-0 h-auto text-clms-lightBlue">
+                    View Activation Guide
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="p-1.5 bg-amber-100 rounded-full">
+                  <Calendar size={16} className="text-amber-600" />
+                </div>
+                <div>
+                  <p className="font-medium">Renewal Process</p>
+                  <p className="text-sm text-gray-500">Learn about the renewal process</p>
+                  <Button variant="link" className="p-0 h-auto text-clms-lightBlue">
+                    View Renewal Guide
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start mb-2">
-              <div className="p-2 bg-blue-100 rounded">
-                <Shield size={20} className="text-clms-lightBlue" />
-              </div>
-              <Badge
-                variant="outline"
-                className={`
-                  ${license.status === 'active' ? 'bg-green-50 text-green-700 border-green-200' : ''}
-                  ${license.status === 'expiring' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : ''}
-                  ${license.status === 'expired' ? 'bg-red-50 text-red-700 border-red-200' : ''}
-                `}
-              >
-                {license.status === 'active' && 'Active'}
-                {license.status === 'expiring' && (
-                  <span className="flex items-center gap-1">
-                    <AlertTriangle size={12} />
-                    Expiring Soon
-                  </span>
-                )}
-                {license.status === 'expired' && 'Expired'}
-              </Badge>
-            </div>
-            <h3 className="text-lg font-medium mt-3">License Type</h3>
-            <p className="text-2xl font-bold">{license.type}</p>
-            <div className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Start Date:</span>
-                <span className="font-medium">{license.startDate}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Expiry Date:</span>
-                <span className="font-medium">{license.expiryDate}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Renewal Price:</span>
-                <span className="font-medium">{license.renewalPrice}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start mb-2">
-              <div className="p-2 bg-green-100 rounded">
-                <Users size={20} className="text-green-600" />
-              </div>
-            </div>
-            <h3 className="text-lg font-medium mt-3">User Seats</h3>
-            <div className="mt-2">
-              <div className="flex justify-between mb-1">
-                <span>{license.seats.used} of {license.seats.total} seats used</span>
-                <span>{seatsUsagePercent}%</span>
-              </div>
-              <Progress value={seatsUsagePercent} className="h-2" />
-            </div>
-            <div className="mt-6">
-              <Button variant="outline" size="sm" className="w-full">
-                Manage Users
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start mb-2">
-              <div className="p-2 bg-orange-100 rounded">
-                <Calendar size={20} className="text-orange-600" />
-              </div>
-            </div>
-            <h3 className="text-lg font-medium mt-3">Status Information</h3>
-            {license.status === 'active' && (
-              <div className="mt-2">
-                <div className="flex items-center gap-2 text-green-600 mb-2">
-                  <CheckCircle2 size={18} />
-                  <span className="font-medium">License Active</span>
-                </div>
-                <p className="text-sm text-gray-600">Your license is valid and active. You have full access to all features.</p>
-              </div>
-            )}
-            {license.status === 'expiring' && (
-              <div className="mt-2">
-                <div className="flex items-center gap-2 text-yellow-600 mb-2">
-                  <Clock size={18} />
-                  <span className="font-medium">{daysLeft} Days Left</span>
-                </div>
-                <p className="text-sm text-gray-600">Your license is expiring soon. Please renew to maintain access.</p>
-                <Button size="sm" className="mt-4 bg-clms-lightBlue hover:bg-clms-blue">
-                  Renew Now
-                </Button>
-              </div>
-            )}
-            {license.status === 'expired' && (
-              <div className="mt-2">
-                <div className="flex items-center gap-2 text-red-600 mb-2">
-                  <AlertTriangle size={18} />
-                  <span className="font-medium">License Expired</span>
-                </div>
-                <p className="text-sm text-gray-600">Your license has expired. Please renew to restore access to all features.</p>
-                <Button size="sm" className="mt-4 bg-clms-lightBlue hover:bg-clms-blue">
-                  Renew Now
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>License Features</CardTitle>
-            <CardDescription>Features included with your {license.type} license</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {license.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2 p-2 border rounded bg-gray-50">
-                  <CheckCircle2 size={16} className="text-green-600" />
-                  <span>{feature}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-          <CardFooter className="border-t pt-6">
-            <Button variant="outline" className="flex items-center gap-1">
-              View Full Documentation
-              <ArrowRight size={14} />
-            </Button>
-          </CardFooter>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activities</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {license.recentActivities.map((activity, index) => (
-                <div key={index} className="border-l-4 border-clms-lightBlue pl-4 py-1">
-                  <p className="text-sm font-medium">{activity.action}</p>
-                  <p className="text-xs text-gray-500">By: {activity.user}</p>
-                  <p className="text-xs text-gray-400 mt-1">{activity.date}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Need Help?</CardTitle>
-          <CardDescription>Get assistance with your license</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col md:flex-row gap-6">
-          <div className="flex-1 border rounded-lg p-5">
-            <h3 className="font-medium mb-2">Technical Support</h3>
-            <p className="text-sm text-gray-600 mb-4">Get technical assistance with your license installation and usage</p>
-            <Button variant="outline" size="sm">Contact Technical Support</Button>
-          </div>
-          
-          <div className="flex-1 border rounded-lg p-5">
-            <h3 className="font-medium mb-2">Billing Support</h3>
-            <p className="text-sm text-gray-600 mb-4">Questions about billing, renewals, or upgrading your license</p>
-            <Button variant="outline" size="sm">Contact Billing Support</Button>
-          </div>
-        </CardContent>
-      </Card>
-    </Layout>
+    </div>
   );
 };
 
-export default LicenseDetails;
+export default ClientLicenseDetails;
