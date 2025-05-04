@@ -8,10 +8,11 @@ import Index from "./pages/Index";
 import LicensesPage from "./pages/LicensesPage";
 import ClientsPage from "./pages/ClientsPage";
 import NotificationsPage from "./pages/NotificationsPage";
-import ReportsPage from "./pages/ReportsPage";
-import DocumentsPage from "./pages/DocumentsPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 const queryClient = new QueryClient();
 
@@ -26,9 +27,10 @@ const App = () => (
           <Route path="/licenses" element={<LicensesPage />} />
           <Route path="/clients" element={<ClientsPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/reports" element={<ReportsPage />} />
-          <Route path="/documents" element={<DocumentsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

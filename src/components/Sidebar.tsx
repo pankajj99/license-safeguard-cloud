@@ -6,11 +6,9 @@ import {
   Key, 
   Users, 
   Bell, 
-  FileText, 
   Settings, 
   ChevronLeft, 
-  ChevronRight,
-  BarChart3
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,8 +23,6 @@ const navItems: NavItem[] = [
   { name: 'Licenses', href: '/licenses', icon: Key },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Notifications', href: '/notifications', icon: Bell },
-  { name: 'Reports', href: '/reports', icon: BarChart3 },
-  { name: 'Documents', href: '/documents', icon: FileText },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
