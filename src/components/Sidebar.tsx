@@ -10,10 +10,7 @@ import {
   Settings, 
   ChevronLeft, 
   ChevronRight,
-  BarChart3,
-  Shield,
-  Clock,
-  ListCheck
+  BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -30,9 +27,6 @@ const navItems: NavItem[] = [
   { name: 'Notifications', href: '/notifications', icon: Bell },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
   { name: 'Documents', href: '/documents', icon: FileText },
-  { name: 'Templates', href: '/templates', icon: ListCheck },
-  { name: 'Audit Logs', href: '/audit-logs', icon: Clock },
-  { name: 'Access Control', href: '/access-control', icon: Shield },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
@@ -51,7 +45,7 @@ const Sidebar = () => {
         "flex items-center py-6 transition-all duration-300",
         collapsed ? "justify-center" : "px-4"
       )}>
-        {!collapsed && <span className="font-bold text-xl tracking-tight">CLMS Admin</span>}
+        {!collapsed && <span className="font-bold text-xl tracking-tight">CLMS</span>}
         {collapsed && <span className="font-bold text-xl">C</span>}
         <button 
           onClick={() => setCollapsed(!collapsed)}
